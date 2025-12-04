@@ -1,217 +1,21 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
+import Header from '@/components/Header';
+import BookingDialog from '@/components/BookingDialog';
+import { services, doctors, reviews, gallery } from '@/data/clinicData';
 
 const Index = () => {
-  const [selectedDoctor, setSelectedDoctor] = useState('');
-  const [selectedService, setSelectedService] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-
-  const services = [
-    {
-      icon: 'Sparkles',
-      title: 'Терапия',
-      description: 'Лечение кариеса, пульпита, периодонтита. Профессиональная гигиена полости рта.',
-      price: 'от 3 500 ₽'
-    },
-    {
-      icon: 'Smile',
-      title: 'Отбеливание',
-      description: 'Профессиональное отбеливание зубов системой Zoom. Безопасно и эффективно.',
-      price: 'от 15 000 ₽'
-    },
-    {
-      icon: 'Shield',
-      title: 'Имплантация',
-      description: 'Установка имплантов премиум-класса. Пожизненная гарантия на имплантаты.',
-      price: 'от 35 000 ₽'
-    },
-    {
-      icon: 'Scan',
-      title: 'Диагностика',
-      description: 'Компьютерная томография, панорамный снимок, консультация специалиста.',
-      price: 'от 1 500 ₽'
-    },
-    {
-      icon: 'Palette',
-      title: 'Виниры',
-      description: 'Керамические виниры для идеальной улыбки. Индивидуальный подбор цвета.',
-      price: 'от 25 000 ₽'
-    },
-    {
-      icon: 'Baby',
-      title: 'Детская стоматология',
-      description: 'Лечение молочных зубов, профилактика, адаптация ребенка к стоматологу.',
-      price: 'от 2 000 ₽'
-    }
-  ];
-
-  const doctors = [
-    {
-      name: 'Иванова Елена',
-      specialty: 'Главный врач, стоматолог-терапевт',
-      experience: '15 лет опыта',
-      image: 'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/c9c5e974-a960-482f-b143-105c64b974d9.jpg'
-    },
-    {
-      name: 'Петров Дмитрий',
-      specialty: 'Стоматолог-хирург, имплантолог',
-      experience: '12 лет опыта',
-      image: 'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/c9c5e974-a960-482f-b143-105c64b974d9.jpg'
-    },
-    {
-      name: 'Сидорова Анна',
-      specialty: 'Стоматолог-ортодонт',
-      experience: '10 лет опыта',
-      image: 'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/c9c5e974-a960-482f-b143-105c64b974d9.jpg'
-    }
-  ];
-
-  const reviews = [
-    {
-      name: 'Мария К.',
-      text: 'Отличная клиника! Делала имплантацию у Петрова Д.В. Всё прошло безболезненно, результат превосходный. Рекомендую!',
-      rating: 5
-    },
-    {
-      name: 'Александр П.',
-      text: 'Очень доволен профессиональной чисткой и отбеливанием. Врачи настоящие профессионалы. Цены адекватные.',
-      rating: 5
-    },
-    {
-      name: 'Ольга С.',
-      text: 'Водила ребёнка на лечение. Врач нашла подход, всё объяснила. Ребёнок больше не боится стоматолога!',
-      rating: 5
-    }
-  ];
-
-  const gallery = [
-    'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/f6e27be6-76cb-492d-a014-571c57df01cd.jpg',
-    'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/378c412c-71cf-435e-b44f-ae2d12d62f20.jpg',
-    'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/f6e27be6-76cb-492d-a014-571c57df01cd.jpg',
-    'https://cdn.poehali.dev/projects/2a500f72-85df-4cc2-85e3-df1dd6d6c62d/files/378c412c-71cf-435e-b44f-ae2d12d62f20.jpg'
-  ];
-
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-white">
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-border z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Icon name="Heart" size={28} className="text-primary" />
-              <span className="text-xl font-bold text-foreground">Здоровая улыбка</span>
-            </div>
-            <div className="hidden md:flex space-x-6">
-              <button onClick={() => scrollToSection('hero')} className="text-sm font-medium hover:text-primary transition-colors">Главная</button>
-              <button onClick={() => scrollToSection('about')} className="text-sm font-medium hover:text-primary transition-colors">О клинике</button>
-              <button onClick={() => scrollToSection('services')} className="text-sm font-medium hover:text-primary transition-colors">Услуги</button>
-              <button onClick={() => scrollToSection('doctors')} className="text-sm font-medium hover:text-primary transition-colors">Врачи</button>
-              <button onClick={() => scrollToSection('gallery')} className="text-sm font-medium hover:text-primary transition-colors">Галерея</button>
-              <button onClick={() => scrollToSection('prices')} className="text-sm font-medium hover:text-primary transition-colors">Цены</button>
-              <button onClick={() => scrollToSection('reviews')} className="text-sm font-medium hover:text-primary transition-colors">Отзывы</button>
-              <button onClick={() => scrollToSection('contacts')} className="text-sm font-medium hover:text-primary transition-colors">Контакты</button>
-            </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>Записаться</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Онлайн запись к врачу</DialogTitle>
-                  <DialogDescription>
-                    Выберите удобное время и специалиста
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Ваше имя</Label>
-                    <Input id="name" placeholder="Иван Иванов" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Телефон</Label>
-                    <Input id="phone" type="tel" placeholder="+7 (999) 123-45-67" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="doctor">Выбрать врача</Label>
-                    <Select value={selectedDoctor} onValueChange={setSelectedDoctor}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите врача" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {doctors.map((doctor) => (
-                          <SelectItem key={doctor.name} value={doctor.name}>
-                            {doctor.name} — {doctor.specialty}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="service">Услуга</Label>
-                    <Select value={selectedService} onValueChange={setSelectedService}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите услугу" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {services.map((service) => (
-                          <SelectItem key={service.title} value={service.title}>
-                            {service.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="date">Дата</Label>
-                      <Input 
-                        id="date" 
-                        type="date" 
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="time">Время</Label>
-                      <Select value={selectedTime} onValueChange={setSelectedTime}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Время" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="9:00">9:00</SelectItem>
-                          <SelectItem value="10:00">10:00</SelectItem>
-                          <SelectItem value="11:00">11:00</SelectItem>
-                          <SelectItem value="12:00">12:00</SelectItem>
-                          <SelectItem value="14:00">14:00</SelectItem>
-                          <SelectItem value="15:00">15:00</SelectItem>
-                          <SelectItem value="16:00">16:00</SelectItem>
-                          <SelectItem value="17:00">17:00</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="comment">Комментарий</Label>
-                    <Textarea id="comment" placeholder="Дополнительная информация" />
-                  </div>
-                  <Button className="w-full">Подтвердить запись</Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-      </nav>
+      <Header scrollToSection={scrollToSection} doctors={doctors} services={services} />
 
       <section id="hero" className="pt-24 pb-16 px-4">
         <div className="container mx-auto">
@@ -224,48 +28,16 @@ const Index = () => {
                 Современная стоматология с профессиональными врачами и новейшим оборудованием
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Dialog>
-                  <DialogTrigger asChild>
+                <BookingDialog 
+                  trigger={
                     <Button size="lg" className="text-lg">
                       <Icon name="Calendar" className="mr-2" size={20} />
                       Записаться на приём
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Онлайн запись к врачу</DialogTitle>
-                      <DialogDescription>
-                        Выберите удобное время и специалиста
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name2">Ваше имя</Label>
-                        <Input id="name2" placeholder="Иван Иванов" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="phone2">Телефон</Label>
-                        <Input id="phone2" type="tel" placeholder="+7 (999) 123-45-67" />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="doctor2">Выбрать врача</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Выберите врача" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {doctors.map((doctor) => (
-                              <SelectItem key={doctor.name} value={doctor.name}>
-                                {doctor.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <Button className="w-full">Подтвердить запись</Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                  }
+                  doctors={doctors}
+                  services={services}
+                />
                 <Button size="lg" variant="outline" className="text-lg" onClick={() => scrollToSection('contacts')}>
                   <Icon name="Phone" className="mr-2" size={20} />
                   Позвонить
@@ -357,24 +129,13 @@ const Index = () => {
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-primary">{service.price}</span>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline">Записаться</Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Запись на {service.title.toLowerCase()}</DialogTitle>
-                          <DialogDescription>
-                            Заполните форму и мы свяжемся с вами
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <Input placeholder="Ваше имя" />
-                          <Input type="tel" placeholder="Телефон" />
-                          <Button className="w-full">Отправить заявку</Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                    <BookingDialog 
+                      trigger={<Button variant="outline">Записаться</Button>}
+                      doctors={doctors}
+                      services={services}
+                      title={`Запись на ${service.title.toLowerCase()}`}
+                      description="Заполните форму и мы свяжемся с вами"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -405,25 +166,13 @@ const Index = () => {
                   <p className="text-sm text-primary font-medium">{doctor.experience}</p>
                 </CardHeader>
                 <CardContent>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="w-full">Записаться к врачу</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Запись к {doctor.name}</DialogTitle>
-                        <DialogDescription>
-                          {doctor.specialty}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <Input placeholder="Ваше имя" />
-                        <Input type="tel" placeholder="Телефон" />
-                        <Input type="date" />
-                        <Button className="w-full">Записаться</Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <BookingDialog 
+                    trigger={<Button className="w-full">Записаться к врачу</Button>}
+                    doctors={doctors}
+                    services={services}
+                    title={`Запись к ${doctor.name}`}
+                    description={doctor.specialty}
+                  />
                 </CardContent>
               </Card>
             ))}
